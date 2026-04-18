@@ -1,0 +1,14 @@
+services:
+  shinobi:
+    image: shinobicctv/shinobi:latest
+    container_name: shinobi
+    restart: always
+    environment:
+      - TIMEZONE=Europe/Warsaw
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /home/bartix643/media/kamery/config:/config
+      - /home/bartix643/media/kamery/videos:/home/Shinobi/videos
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 8095:8080

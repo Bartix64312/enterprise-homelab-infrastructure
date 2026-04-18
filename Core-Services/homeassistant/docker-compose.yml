@@ -1,0 +1,17 @@
+version: '3'
+services:
+  homeassistant:
+    container_name: homeassistant
+    image: "ghcr.io/home-assistant/home-assistant:stable"
+    volumes:
+      - /home/user/homeassistant:/config
+      - /etc/localtime:/etc/localtime:ro
+    restart: unless-stopped
+    ports:
+      - 8123:8123
+    networks:
+      - sso_net # Podpinamy do Twojej głównej sieci, żeby widział inne usługi
+
+networks:
+  sso_net:
+    external: true

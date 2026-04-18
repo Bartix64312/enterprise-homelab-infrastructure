@@ -1,0 +1,20 @@
+version: '3'
+services:
+  lldap:
+    image: lldap/lldap:latest
+    container_name: lldap
+    restart: always
+    ports:
+      - "3890:3890" # Port dla aplikacji (LDAP)
+      - "17170:17170" # Port dla panelu admina (HTTP)
+    environment:
+      - TZ=Europe/Warsaw
+      - LLDAP_JWT_SECRET=example
+      - LLDAP_LDAP_BASE_DN=dc=example,dc=ovh
+      - LLDAP_LDAP_USER_PASS=example
+      - LLDAP_LDAP_USER_EMAIL=example@example.com
+    volumes:
+      - lldap_data:/data
+
+volumes:
+  lldap_data:

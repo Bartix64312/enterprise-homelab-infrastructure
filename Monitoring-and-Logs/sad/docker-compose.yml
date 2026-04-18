@@ -1,0 +1,23 @@
+services:
+  nextcloud-aio-mastercontainer:
+    image: nextcloud/all-in-one:latest
+    init: true
+    restart: always
+    container_name: nextcloud-aio-mastercontainer
+    volumes:
+      - nextcloud_aio_mastercontainer:/mnt/docker-aio-config
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    ports:
+      # Port do panelu zarządzania (Master Interface)
+      - 8080:8080
+    environment:
+      # To pozwoli Ci wejść na stronę bez domeny (po IP)
+      - SKIP_DOMAIN_VALIDATION=true
+      # Twój wybrany port dla Nextcloud (zamiast domyślnego 443)
+      - APACHE_PORT=11000
+      - APACHE_IP_BINDING=0.0.0.0
+      # USUNĄŁEM: NEXTCLOUD_DATADIR (to naprawi błąd importu bazy!)
+
+volumes:
+  nextcloud_aio_mastercontainer:
+    name: nextcloud_aio_mastercontainer

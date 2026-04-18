@@ -1,0 +1,11 @@
+version: '3.9'
+services:
+  tunnel:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflare-tunnel
+    restart: always
+    command: tunnel run --token exampletoken
+    dns:
+      - 1.1.1.1
+      - 1.0.0.1
+

@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  lldap:
+    image: lldap/lldap:latest
+    container_name: sso_lldap_backend
+    restart: always
+    ports:
+      - "3890:3890"  
+      - "17170:17170" 
+    environment:
+      - TZ=Europe/Warsaw
+      - LLDAP_LDAP_BASE_DN="dc=example,dc=ovh"
+      - LLDAP_LDAP_USER_PASS="example"
+      - LLDAP_JWT_SECRET="example"
+    volumes:
+      - lldap_data:/data
+    networks:
+      - sso_net
+
+  authelia:
+    image: authelia/authelia:latest
+    container_name: sso_authelia_frontend
+    restart: always
+    ports:
+      - "9092:9091" # Authelia na 9092 (9091 ma Transmission)
+    volumes:
+      - /home/user/authelia:/config
+    depends_on:
+      - lldap
+      - redis
+    networks:
+      - sso_net
+
+  redis:
+    image: redis:alpine
+    container_name: sso_redis_cache
+    restart: always
+    networks:
+      - sso_net
+
+networks:
+  sso_net:
+    name: sso_net
+
+volumes:
+  lldap_data:

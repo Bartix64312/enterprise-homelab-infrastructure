@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  uptime-kuma-new:
+    image: louislam/uptime-kuma:1
+    container_name: uptime-kuma-new
+    restart: always
+    volumes:
+      - uptime-kuma-new-data:/app/data
+    ports:
+      - "3002:3001"
+
+  cloudflared-new:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflared-tunnel-new
+    restart: always
+    command: tunnel --no-autoupdate run --token exampletoken
+    dns:
+      - 1.1.1.1
+      - 1.0.0.1
+
+volumes:
+  uptime-kuma-new-data:
