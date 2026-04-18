@@ -1,11 +1,11 @@
 # Enterprise-Grade Home Infrastructure & Security Lab
 
-## 📖 Project Overview
+##  Project Overview
 This repository documents the architecture, deployment, and configuration of a resilient, automated, and security-hardened self-hosted infrastructure platform. The project integrates hardware virtualization with container orchestration to create a robust environment for self-hosted private services.
 
 The primary objective was to architect a secure, isolated environment supporting automated data processing pipelines and to implement Enterprise-class solutions for Identity and Access Management (IAM) and network security. This environment serves as a continuous practical testing ground for cybersecurity concepts, network micro-segmentation, and incident response simulations.
 
-## 🛠️ Tech Stack / Technologies Used
+##  Tech Stack / Technologies Used
 
 **Infrastructure & Orchestration:**
 <br>
