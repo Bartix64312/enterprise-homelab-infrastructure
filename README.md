@@ -1,11 +1,11 @@
 # Enterprise-Grade Home Infrastructure & Security Lab
 
-## 📖 Project Overview
+##  Project Overview
 This repository documents the architecture, deployment, and configuration of a resilient, automated, and security-hardened self-hosted infrastructure platform. The project integrates hardware virtualization with container orchestration to create a robust environment for self-hosted private services.
 
 The primary objective was to architect a secure, isolated environment supporting automated data processing pipelines and to implement Enterprise-class solutions for Identity and Access Management (IAM) and network security. This environment serves as a continuous practical testing ground for cybersecurity concepts, network micro-segmentation, and incident response simulations.
 
-## 🛠️ Tech Stack / Technologies Used
+##  Tech Stack / Technologies Used
 
 **Infrastructure & Orchestration:**
 <br>
@@ -27,7 +27,7 @@ The primary objective was to architect a secure, isolated environment supporting
 <img src="https://img.shields.io/badge/Jellyfin-00A4DC?style=for-the-badge&logo=jellyfin&logoColor=white" alt="Jellyfin" />
 <img src="https://img.shields.io/badge/Automated_Data_Pipeline-4A4A55?style=for-the-badge&logo=databricks&logoColor=white" alt="Pipeline" />
 
-## 🏗️ Architecture & Topology
+##  Architecture & Topology
 
 The core architecture leverages Virtual Machines (VMs) managed by the **Proxmox VE** hypervisor. To maintain a clear separation between the virtualization layer and the containerization layer, the **Docker Engine** is deployed within a dedicated, hardened Ubuntu LTS VM provisioned on Proxmox.
 
@@ -57,7 +57,7 @@ The architecture separates **control plane components** (Proxmox hypervisor, IAM
       └──> Automated Data Processing Pipeline
 ```
 
-## 🔐 Security, Hardening & Access Control
+##  Security, Hardening & Access Control
 
 Security is embedded into the core of this infrastructure, adhering to a strict **defense-in-depth approach with network micro-segmentation**:
 
@@ -67,13 +67,13 @@ Security is embedded into the core of this infrastructure, adhering to a strict 
 *   **OS-Level Hardening:** The underlying Ubuntu VM is hardened using `ufw` configured with default-deny policies, `fail2ban` for SSH brute-force mitigation, and `unattended-upgrades` for automated security patching.
 *   **Service-to-Service Trust:** Inter-container communication is currently trusted within dedicated internal Docker networks. Enforcing mTLS and service identity validation to implement Zero Trust principles at the service mesh level is a planned improvement.
 
-## ⚙️ Deployment & Automation (Data Pipeline)
+##  Deployment & Automation (Data Pipeline)
 
 The infrastructure features a fully automated data ingestion and media management pipeline, demonstrating proficiency in integrating API-driven microservices. The pipeline orchestrates content discovery, automated quality-profile matching, controlled asset retrieval, post-processing (normalization, cataloguing), and seamless integration with the media server for on-demand streaming.
 
 All services are deployed using the **Infrastructure as Code (IaC)** methodology.The infrastructure code is organized into categorical directories (e.g., /Security-and-Auth, /Core-Services) within this repository, containing the docker-compose.yml blueprints utilized for deployment. . While secrets are temporarily managed via environment variables for initial lab bootstrapping, the architecture is specifically decoupled to allow seamless migration to an externalized key management system. The next iteration targets **SOPS (Mozilla SOPS) with Age encryption** for storing encrypted secrets directly in the repository, providing a practical intermediate step before a full HashiCorp Vault deployment.
 
-## 🔄 Backup & Disaster Recovery (DR)
+##  Backup & Disaster Recovery (DR)
 
 To ensure data integrity and service recoverability, a multi-tiered backup strategy is implemented:
 1.  **Proxmox Level:** Automated, scheduled snapshots of the entire Ubuntu VM to an external, physically separated drive.
@@ -81,7 +81,7 @@ To ensure data integrity and service recoverability, a multi-tiered backup strat
 3.  **Pre-Deployment Safeguards:** Point-in-time VM snapshots are executed prior to major state mutations or core stack upgrades, effectively providing an instant rollback mechanism to minimize Mean Time To Recovery (MTTR) during deployment regressions.
 4.  **DR Testing:** Backup integrity is periodically validated through restoration drills, confirming recoverability and verifying that the documented Recovery Time Objective (RTO) is achievable under real failure conditions.
 
-## 🎯 Threat Model
+##  Threat Model
 
 The security architecture was designed against the following threat scenarios:
 
@@ -93,7 +93,7 @@ The security architecture was designed against the following threat scenarios:
 | Insider / misconfiguration | Accidental secret exposure | `.gitignore`, no hardcoded credentials in IaC files |
 | Supply chain | Vulnerable base image | Trivy scanning (planned), minimal base images, and regular image updates |
 
-## 🛡️ Security Use Cases (Hands-On)
+##  Security Use Cases (Hands-On)
 
 This environment is actively used to simulate and analyze real-world security scenarios:
 
@@ -103,14 +103,14 @@ This environment is actively used to simulate and analyze real-world security sc
 *   Container permission misconfigurations and volume exposure risks
 *   Service exposure validation — ensuring no unintended public endpoints survive a configuration change
 
-## ⚠️ Challenges & Lessons Learned
+##  Challenges & Lessons Learned
 
 Building this environment provided extensive hands-on experience in troubleshooting complex network and application layer issues:
 
 *   **Troubleshooting Docker DNS Resolution & Reverse Proxy:** Resolved persistent HTTP 500/502 Gateway error loops between Nginx Proxy Manager and Authelia. The solution required enforcing strict internal Docker networking, overriding the default Docker DNS resolver (`127.0.0.11` resolution inconsistencies under specific network configurations) with manual variable assignments, and explicitly setting `X-Forwarded-Proto https` headers to satisfy Authelia's strict TLS security requirements behind a Cloudflare Tunnel. **Key takeaway:** Docker inter-container DNS resolution should always be validated explicitly during initial stack deployment, particularly in multi-proxy architectures.
 *   **Permissions & Container Volumes:** Debugged path mapping discrepancies where internal automated services failed to locate ingested data. This required aligning PUID/PGID environment variables and creating unified, absolute path mappings across multiple isolated containers to prevent permission-denied errors. **Key takeaway:** Standardizing container execution contexts using uniform PUID/PGID and centralized volume management is critical for scalable, permission-agnostic data pipelines.
 
-## 🔍 Live Verification (Read-Only)
+##  Live Verification (Read-Only)
 
 To demonstrate the IAM and reverse proxy security layers in a real-world scenario, a read-only demo endpoint is available upon request for technical reviewers. The demo environment runs in a dedicated Docker network namespace fully isolated from production data (Nextcloud, personal files) — no production credentials or data are accessible through the demo stack.
 
@@ -122,13 +122,13 @@ To demonstrate the IAM and reverse proxy security layers in a real-world scenari
 *Demo credentials (read-only user + TOTP seed) available via private message to verified hiring managers.*
 
 
-## 📊 Observability & Telemetry
+##  Observability & Telemetry
 
 A dedicated monitoring stack (`compose-files/monitoring-stack.yml`) provides full visibility into the infrastructure's operational health. **Prometheus** scrapes host and container metrics via **Node Exporter**, while **Loki** aggregates structured logs shipped by **Promtail**. **Grafana** dashboards visualize resource utilization, authentication latency (Authelia metrics), and filesystem usage, enabling proactive anomaly detection and capacity planning.
 
 The monitoring stack also serves as a security observability layer: centralized, structured logs enable SIEM-like correlation of authentication events, failed access attempts, and anomalous resource consumption patterns — supporting incident investigation workflows.
 
-## 🚀 Future Improvements
+##  Future Improvements
 
 The infrastructure is an actively evolving environment. Near-term objectives focused on enhancing security incident detection and operational maturity include:
 
